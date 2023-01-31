@@ -9532,9 +9532,9 @@ Also return non-nil if it is the command `self-insert-command' is remapped to."
               ) ;t
              ) ;cond
            (unless void
-             (setq val (or (plist-get map tag 'equal) 0))
+             (setq val (or (lax-plist-get map tag) 0))
              (setq val (if end (1- val) (1+ val)))
-             (setq map (plist-put map tag val 'equal))
+             (setq map (lax-plist-put map tag val))
              ;;(message "val=%S tag=%S end=%S | %S" val tag end (plist-get map tag))
              (setq continue (not (> val 0)))
              ) ;unless
