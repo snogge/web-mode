@@ -1,0 +1,54 @@
+name: Build and test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'master'
+      - '*'
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs_version:
+          - 23.4
+          - 24.1
+          - 24.2
+          - 24.3
+          - 24.4
+          - 24.5
+          - 25.1
+          - 25.2
+          - 25.3
+          - 26.1
+          - 26.2
+          - 26.3
+          - 27.1
+          - 27.2
+          - 28.1
+          - 28.2
+          - release-snapshot
+          - snapshot
+    steps:
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+
+    - uses: actions/checkout@v3
+      
+    - name: Run tests
+      run: |
+        chmod a+x run.sh
+        ./run.sh
+
+    - name: Byte compile
+      run: |
+        emacs -batch -no-site-file -Q --eval '(byte-compile-file "web-mode.el")'
+
+    - name: Run byte compiled test
+      run: |
+        ./run.sh
+        
